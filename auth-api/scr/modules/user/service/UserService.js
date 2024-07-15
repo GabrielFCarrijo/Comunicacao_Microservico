@@ -11,8 +11,11 @@ class UserService {
     async findByEmail(req) {
         try {
             const { email } = req.params;
+            const { authUser } = req;
             this.validarDadosRequisicao(email);
             let user = await UserRepository.findByEmail(email); 
+            this.validateUserNotFound(user);
+            this.validadeAuthenticatedUser(user, authUser);
             if (!user) {
                 throw new UserException(HttpStatus.NOT_FOUND, "User not found.");
             }
@@ -74,11 +77,18 @@ class UserService {
         }
     }
 
+    validadeAuthenticatedUser(user, authUser) {
+        if (!authUser || user.id != authUser.id) {
+          throw new UserException(HttpStatus.FORBIDDEN, "You cannot see this user data")  
+        }
+    }
+
     async validadePassword(password, hashPassword) {
         if (!await bcrypt.compare(password, hashPassword)) {
             throw new UserException(HttpStatus.UNAUTHORIZED, "Password doesn't valid!");
         }
     }
+    
 }
 
 export default new UserService();

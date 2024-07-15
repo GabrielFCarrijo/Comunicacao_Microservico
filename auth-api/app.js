@@ -11,8 +11,6 @@ createInicialData();
 
 app.use(express.json());
 app.use(UserRoutes);
-app.use(checkToken);
-
 app.get('/api/status', (req, res) => {
     return res.status(200).json({
         service: 'Auth-API',
@@ -20,6 +18,9 @@ app.get('/api/status', (req, res) => {
         httpStatus: 200,
     });
 });
+
+app.use(checkToken);
+
 
 app.listen(PORT, () => {
     console.info(`Server started successfully at port ${PORT}`);
