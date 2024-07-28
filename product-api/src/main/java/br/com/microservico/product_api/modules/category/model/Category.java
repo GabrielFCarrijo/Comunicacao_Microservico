@@ -18,12 +18,12 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
 
-    @Column(name = "DESCRIPTION", nullable = false)
+    @Column(name = "DESCRIPTION")
     private String description;
 
     public static Category of(CategoryRequest request) {
         var category = new Category();
-        BeanUtils.copyProperties(category, request);
+        BeanUtils.copyProperties(request, category);
         return category;
     }
 }

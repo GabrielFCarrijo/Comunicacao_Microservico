@@ -31,8 +31,8 @@ public class ProductService {
 
     public ProductResponse save(ProductRequest request) {
         validadeProductObject(request);
-        var supplier = supplierService.verificationSupplierExists(request.getSupplierID());
-        var category = categoryService.verificationCategoryExists(request.getCategoryID());
+        var supplier = supplierService.verifySupplierExists(request.getSupplier());
+        var category = categoryService.verifyCategoryExists(request.getCategory());
         var product = productRepository.save(Product.of(request, supplier, category));
         return ProductResponse.of(productRepository.save(product));
     }
@@ -46,10 +46,10 @@ public class ProductService {
         if (isEmpty(request.getQuantity())){
             throw new ValidationException("Product Quantity must be informed");
         }
-        if(isEmpty(request.getCategoryID()) || request.getCategoryID() == null){
+        if(isEmpty(request.getCategory()) || request.getCategory() == null){
             throw new ValidationException("Product Category ID must be informed");
         }
-        if(isEmpty(request.getSupplierID()) || request.getSupplierID() == null){
+        if(isEmpty(request.getSupplier()) || request.getSupplier() == null){
             throw new ValidationException("Product Supplier ID must be informed");
         }
     }

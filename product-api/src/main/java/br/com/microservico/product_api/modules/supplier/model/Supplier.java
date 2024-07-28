@@ -1,7 +1,5 @@
 package br.com.microservico.product_api.modules.supplier.model;
 
-import br.com.microservico.product_api.modules.category.dto.CategoryRequest;
-import br.com.microservico.product_api.modules.category.model.Category;
 import br.com.microservico.product_api.modules.supplier.dto.SupplierRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,7 +23,7 @@ public class Supplier {
 
     public static Supplier of(SupplierRequest request) {
         var supplier = new Supplier();
-        BeanUtils.copyProperties(supplier, request);
+        BeanUtils.copyProperties(request, supplier);
         return supplier;
     }
 }

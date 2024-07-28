@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
-
 @Service
 public class SupplierService {
 
@@ -18,18 +17,19 @@ public class SupplierService {
     private SupplierRepository supplierRepository;
 
     public SupplierResponse save(SupplierRequest request) {
-        validadeSupplierNameInformed(request);
+        validateSupplierNameInformed(request);
         var supplier = supplierRepository.save(Supplier.of(request));
-        return  SupplierResponse.of(supplier);
+        return SupplierResponse.of(supplier);
     }
 
-    private void validadeSupplierNameInformed(SupplierRequest request) {
+    private void validateSupplierNameInformed(SupplierRequest request) {
         if (isEmpty(request.getName())) {
             throw new ValidationException("Supplier's name must be informed");
         }
     }
 
-    public Supplier verificationSupplierExists(Integer supplierID) {
-        return supplierRepository.findById(supplierID).orElseThrow(() -> new ValidationException("Supplier ID not found"));
+    public Supplier verifySupplierExists(Integer supplierID) {
+        return supplierRepository.findById(supplierID)
+                .orElseThrow(() -> new ValidationException("Supplier ID not found"));
     }
 }
