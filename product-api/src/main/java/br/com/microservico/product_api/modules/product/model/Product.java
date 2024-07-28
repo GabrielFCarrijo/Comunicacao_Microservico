@@ -1,13 +1,18 @@
 package br.com.microservico.product_api.modules.product.model;
 
+import br.com.microservico.product_api.modules.category.model.Category;
+import br.com.microservico.product_api.modules.product.dto.ProductRequest;
+import br.com.microservico.product_api.modules.supplier.model.Supplier;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Builder
 @Table(name = "product")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -37,5 +42,14 @@ public class Product {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public static Product of(ProductRequest request, Supplier supplier, Category category) {
+         return Product.builder()
+                .name(request.getName())
+                .supplier(supplier)
+                .category(category)
+                .quantityAvailable(request.getQuantity())
+                .build();
     }
 }

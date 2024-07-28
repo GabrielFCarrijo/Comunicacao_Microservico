@@ -1,7 +1,6 @@
-package br.com.microservico.product_api.modules.product.dto;
+package br.com.microservico.product_api.modules.category.dto;
 
-import br.com.microservico.product_api.modules.product.model.Category;
-import com.fasterxml.jackson.databind.util.BeanUtil;
+import br.com.microservico.product_api.modules.category.model.Category;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 

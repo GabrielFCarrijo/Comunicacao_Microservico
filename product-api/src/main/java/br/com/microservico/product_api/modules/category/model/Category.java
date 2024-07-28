@@ -1,6 +1,6 @@
-package br.com.microservico.product_api.modules.product.model;
+package br.com.microservico.product_api.modules.category.model;
 
-import br.com.microservico.product_api.modules.product.dto.CategoryRequest;
+import br.com.microservico.product_api.modules.category.dto.CategoryRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
