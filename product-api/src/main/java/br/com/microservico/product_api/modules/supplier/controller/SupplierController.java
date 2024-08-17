@@ -1,5 +1,8 @@
 package br.com.microservico.product_api.modules.supplier.controller;
 
+import br.com.microservico.product_api.config.exception.SuccesResoponse;
+import br.com.microservico.product_api.modules.category.dto.CategoryRequest;
+import br.com.microservico.product_api.modules.category.dto.CategoryResponse;
 import br.com.microservico.product_api.modules.supplier.dto.SupplierRequest;
 import br.com.microservico.product_api.modules.supplier.dto.SupplierResponse;
 import br.com.microservico.product_api.modules.supplier.service.SupplierService;
@@ -13,7 +16,7 @@ import java.util.List;
 public class SupplierController {
 
     @Autowired
-    private SupplierService supplierService;
+    SupplierService supplierService;
 
     @PostMapping
     public SupplierResponse save(@RequestBody SupplierRequest request) {
@@ -24,15 +27,24 @@ public class SupplierController {
     public List<SupplierResponse> findAll() {
         return supplierService.findAllSupplier();
     }
+
     @GetMapping("/{id}")
-    public SupplierResponse findById(@PathVariable Long id) {
+    public SupplierResponse findById(@PathVariable Integer id) {
         return supplierService.findById(id);
     }
 
-    @GetMapping("/description")
+    @GetMapping("name/{name}")
     public List<SupplierResponse> findByName(@PathVariable String name) {
         return supplierService.findByName(name);
     }
 
+    @PutMapping("{id}")
+    public SupplierResponse update(@RequestBody SupplierRequest request, @PathVariable Integer id) {
+        return supplierService.update(request, id);
+    }
 
+    @DeleteMapping("{id}")
+    public SuccesResoponse deleteById(@PathVariable Integer id) {
+        return supplierService.delete(id);
+    }
 }

@@ -1,6 +1,8 @@
 package br.com.microservico.product_api.modules.supplier.service;
 
+import br.com.microservico.product_api.config.exception.SuccesResoponse;
 import br.com.microservico.product_api.config.exception.ValidationException;
+import br.com.microservico.product_api.modules.product.service.ProductService;
 import br.com.microservico.product_api.modules.supplier.dto.SupplierRequest;
 import br.com.microservico.product_api.modules.supplier.dto.SupplierResponse;
 import br.com.microservico.product_api.modules.supplier.model.Supplier;
@@ -18,12 +20,25 @@ public class SupplierService {
 
     @Autowired
     private SupplierRepository supplierRepository;
+    @Autowired
+    private ProductService productService;
 
     public SupplierResponse save(SupplierRequest request) {
         validateSupplierNameInformed(request);
         var supplier = supplierRepository.save(Supplier.of(request));
         return SupplierResponse.of(supplier);
     }
+
+    public SupplierResponse update(SupplierRequest request, Integer id) {
+        validateSupplierNameInformed(request);
+
+        var supplier = Supplier.of(request);
+        supplier.setId(id);
+        supplierRepository.save(supplier);
+
+        return SupplierResponse.of(supplier);
+    }
+
 
     private void validateSupplierNameInformed(SupplierRequest request) {
         if (isEmpty(request.getName())) {
@@ -32,6 +47,7 @@ public class SupplierService {
     }
 
     public Supplier verifySupplierExists(Integer supplierID) {
+        validateInformedId(supplierID);
         return supplierRepository.findById(supplierID)
                 .orElseThrow(() -> new ValidationException("Supplier ID not found"));
     }
@@ -44,14 +60,31 @@ public class SupplierService {
     }
 
     public List<SupplierResponse> findByName(String name) {
-        return supplierRepository.findByName(name)
-                .stream().map(SupplierResponse::of)
+        return supplierRepository.findByNameContaining(name)
+                .stream()
+                .map(SupplierResponse::of)
                 .collect(Collectors.toList());
     }
 
-    public SupplierResponse findById(Long id) {
+    public SupplierResponse findById(Integer id) {
+        validateInformedId(id);
         return supplierRepository.findById(Math.toIntExact(id))
                 .map(SupplierResponse::of)
                 .orElseThrow(() -> new ValidationException("Supplier ID not found"));
+    }
+
+    public SuccesResoponse delete(Integer id) {
+        validateInformedId(id);
+        if (productService.existsBySupplierId(id)) {
+            throw new ValidationException("Supplier cannot be deleted because it has associated products");
+        }
+        supplierRepository.deleteById(id);
+        return SuccesResoponse.create("The supplier has been deleted");
+    }
+
+    public void validateInformedId(Integer id) {
+        if (isEmpty(id)) {
+            throw new ValidationException("Supplier ID must be informed");
+        }
     }
 }
