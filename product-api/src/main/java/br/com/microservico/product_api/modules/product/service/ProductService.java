@@ -13,6 +13,7 @@ import br.com.microservico.product_api.modules.product.repository.ProductReposit
 import br.com.microservico.product_api.modules.supplier.dto.SupplierResponse;
 import br.com.microservico.product_api.modules.supplier.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,9 +26,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
-    @Autowired
+    @Lazy
     private CategoryService categoryService;
-    @Autowired
+    @Lazy
     private SupplierService supplierService;
 
     public ProductResponse save(ProductRequest request) {
