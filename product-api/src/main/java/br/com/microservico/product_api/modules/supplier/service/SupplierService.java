@@ -7,6 +7,7 @@ import br.com.microservico.product_api.modules.supplier.dto.SupplierRequest;
 import br.com.microservico.product_api.modules.supplier.dto.SupplierResponse;
 import br.com.microservico.product_api.modules.supplier.model.Supplier;
 import br.com.microservico.product_api.modules.supplier.repository.SupplierRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -53,11 +54,12 @@ public class SupplierService {
                 .orElseThrow(() -> new ValidationException("Supplier ID not found"));
     }
 
-    public List<SupplierResponse> findAllSupplier() {
-        return supplierRepository.findAll()
+    public List<SupplierResponse> findAll() {
+        return supplierRepository
+                .findAll()
                 .stream()
                 .map(SupplierResponse::of)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public List<SupplierResponse> findByName(String name) {

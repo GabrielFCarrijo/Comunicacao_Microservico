@@ -41,4 +41,7 @@ public class ProductResponse {
                 .build();
     }
 
+    public void updateStock() {
+
+    }
 }

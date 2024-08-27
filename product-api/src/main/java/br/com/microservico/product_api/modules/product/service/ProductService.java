@@ -2,25 +2,28 @@ package br.com.microservico.product_api.modules.product.service;
 
 import br.com.microservico.product_api.config.exception.SuccesResoponse;
 import br.com.microservico.product_api.config.exception.ValidationException;
-import br.com.microservico.product_api.modules.category.dto.CategoryRequest;
-import br.com.microservico.product_api.modules.category.dto.CategoryResponse;
-import br.com.microservico.product_api.modules.category.model.Category;
 import br.com.microservico.product_api.modules.category.service.CategoryService;
 import br.com.microservico.product_api.modules.product.dto.ProductRequest;
 import br.com.microservico.product_api.modules.product.dto.ProductResponse;
+import br.com.microservico.product_api.modules.product.dto.ProductStockDTO;
 import br.com.microservico.product_api.modules.product.model.Product;
 import br.com.microservico.product_api.modules.product.repository.ProductRepository;
-import br.com.microservico.product_api.modules.supplier.dto.SupplierResponse;
+import br.com.microservico.product_api.modules.sales.dto.SalesConfirmationDTO;
+import br.com.microservico.product_api.modules.sales.enums.SalesStatusEnum;
+import br.com.microservico.product_api.modules.sales.rabbit.SalesConfirmationSender;
 import br.com.microservico.product_api.modules.supplier.service.SupplierService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
+@Slf4j
 @Service
 public class ProductService {
 
@@ -30,6 +33,8 @@ public class ProductService {
     private CategoryService categoryService;
     @Lazy
     private SupplierService supplierService;
+    @Autowired
+    private SalesConfirmationSender salesConfirmationSender;
 
     public ProductResponse save(ProductRequest request) {
         validadeProductObject(request);
@@ -116,6 +121,48 @@ public class ProductService {
             throw new ValidationException("Product ID must be informed");
         }
     }
+
+
+    public void updateProductStock(ProductStockDTO product) {
+        try {
+            validateStockUpdateData(product);
+            updateStock(product);
+        } catch (Exception e) {
+            log.error("An error occurred while updating product stock: {}", e.getMessage());
+            salesConfirmationSender.sendSalesConfirmationMessage(new SalesConfirmationDTO(product.getSalesId(), SalesStatusEnum.REJECTED));
+        }
+    }
+
+    private void updateStock(ProductStockDTO product) {
+        product.getProducts().forEach(salesProduct -> {
+            Product existingProduct = productRepository.findProductId(salesProduct.getProductId());
+            if (salesProduct.getQuantity() > existingProduct.getQuantityAvailable()) {
+                throw new ValidationException(
+                        String.format("The product %s is out of stock", existingProduct.getId())
+                );
+            }
+            existingProduct.updateStock(salesProduct.getQuantity());
+            productRepository.save(existingProduct);
+            var aprovedMessage = new SalesConfirmationDTO(product.getSalesId(), SalesStatusEnum.APROVED);
+            salesConfirmationSender.sendSalesConfirmationMessage(aprovedMessage);
+        });
+    }
+
+    private void validateStockUpdateData(ProductStockDTO product) {
+        if (isEmpty(product) || isEmpty( product.getSalesId())) {
+            throw new ValidationException("The product data or sales id must be provided");
+        }
+        if (isEmpty(product.getProducts())) {
+            throw new ValidationException("Product must be informed");
+        }
+        product.getProducts().forEach(salesProduct -> {
+            if (isEmpty(salesProduct.getQuantity())
+                || isEmpty(salesProduct.getProductId())) {
+                throw new ValidationException("The productID and the quantity must be informed.");
+            }
+        });
+    }
+
 
     private void validadeProductObject(ProductRequest request) {
         if (isEmpty(request.getName())) {

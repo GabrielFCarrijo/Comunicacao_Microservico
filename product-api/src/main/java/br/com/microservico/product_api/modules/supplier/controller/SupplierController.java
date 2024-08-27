@@ -6,12 +6,14 @@ import br.com.microservico.product_api.modules.category.dto.CategoryResponse;
 import br.com.microservico.product_api.modules.supplier.dto.SupplierRequest;
 import br.com.microservico.product_api.modules.supplier.dto.SupplierResponse;
 import br.com.microservico.product_api.modules.supplier.service.SupplierService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/supplier")
 public class SupplierController {
 
@@ -25,7 +27,7 @@ public class SupplierController {
 
     @GetMapping
     public List<SupplierResponse> findAll() {
-        return supplierService.findAllSupplier();
+        return supplierService.findAll();
     }
 
     @GetMapping("/{id}")
