@@ -11,12 +11,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class ProductResponse {
+@NoArgsConstructor
+public class ProductSalesResponse {
+
 
     private Integer id;
     private String name;
@@ -27,16 +29,18 @@ public class ProductResponse {
     private LocalDateTime createdAt;
     private SupplierResponse supplier;
     private CategoryResponse category;
+    private List<String> sales;
 
-    public static ProductResponse of(Product product) {
+    public static ProductSalesResponse of(Product product, List<String> sales){
 
-        return ProductResponse.builder()
+        return ProductSalesResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .quantityAvailable(product.getQuantityAvailable())
                 .createdAt(product.getCreatedAt())
                 .supplier(SupplierResponse.of(product.getSupplier()))
                 .category(CategoryResponse.of(product.getCategory()))
+                .sales(sales)
                 .build();
     }
 
