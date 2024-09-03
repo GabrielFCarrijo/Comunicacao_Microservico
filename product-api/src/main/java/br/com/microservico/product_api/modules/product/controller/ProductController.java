@@ -62,12 +62,12 @@ public class ProductController {
         return productService.delete(id);
     }
 
-    @PostMapping("ckeck-stock")
-    public SuccesResoponse checkProductStock(ProductCheckStockRequest request) {
+    @PostMapping("check-stock")
+    public SuccesResoponse checkProductsStock(@RequestBody ProductCheckStockRequest request) {
         return productService.checkProductStock(request);
     }
 
-    @GetMapping("{productId}/sales")
+    @GetMapping("{id}/sales")
     public ProductSalesResponse findProductSales(@PathVariable Integer productId) {
         return productService.findProductSalesResponse(productId);
     }

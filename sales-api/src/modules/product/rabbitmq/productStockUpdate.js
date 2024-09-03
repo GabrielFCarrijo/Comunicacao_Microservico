@@ -1,5 +1,5 @@
 import amqp from "amqplib/callback_api.js";
-import { RABBIT_MQ_URL } from "../../../config/secrets/secrets";
+import { RABBIT_MQ_URL } from "../../../config/secrets/secrets.js";
 import { PRODUCT_TOPIC,
     PRODUCT_STOCK_UPDATE_ROUTING_KEY, } from "../../../config/rabbitmq/queue.js";
 
