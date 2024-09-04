@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 import UserRepository from "../repository/UserRepository.js";
-import * as HttpStatus from "../../../config/constants/HttpStatus.js";
+import * as httpStatus  from "../../../config/constants/httpStatus .js";
 import UserException from "../exception/UserException.js";
 import * as secrets from "../../../config/constants/secrets.js";
 
@@ -17,10 +17,10 @@ class UserService {
             this.validateUserNotFound(user);
             this.validadeAuthenticatedUser(user, authUser);
             if (!user) {
-                throw new UserException(HttpStatus.NOT_FOUND, "User not found.");
+                throw new UserException(httpStatus .NOT_FOUND, "User not found.");
             }
             return {
-                status: HttpStatus.SUCCESS,
+                status: httpStatus .SUCCESS,
                 user: {
                     id: user.id,
                     name: user.name,
@@ -29,7 +29,7 @@ class UserService {
             };
         } catch (error) {
             return {
-                status: error.status ? error.status : HttpStatus.INTERNAL_SERVER_ERROR,
+                status: error.status ? error.status : httpStatus .INTERNAL_SERVER_ERROR,
                 message: error.message,
             };
         }
@@ -37,6 +37,12 @@ class UserService {
 
     async getAccessToken(req) {
         try {
+            const { transactionid, serviceid } = req.headers;
+            console.info(
+              `Request to POST login with data ${JSON.stringify(
+                req.body
+              )} | [transactionID: ${transactionid} | serviceID: ${serviceid}]`
+            );
             const { email, password } = req.body;
             this.validateAccessTokenData(email, password);
             let user = await UserRepository.findByEmail(email);
@@ -44,13 +50,18 @@ class UserService {
             await this.validadePassword(password, user.password);
             const authUser = { id: user.id, name: user.name, email: user.email };
             const accessToken = jwt.sign({ authUser }, secrets.API_SECRET, { expiresIn: "1d" });
+            console.info(
+                `Response to POST login with data ${JSON.stringify(
+                  response
+                )} | [transactionID: ${transactionid} | serviceID: ${serviceid}]`
+              );
             return {
-                status: HttpStatus.SUCCESS,
+                status: httpStatus .SUCCESS,
                 accessToken,
             };
         } catch (error) {
             return {
-                status: error.status ? error.status : HttpStatus.INTERNAL_SERVER_ERROR,
+                status: error.status ? error.status : httpStatus .INTERNAL_SERVER_ERROR,
                 message: error.message,
             };
         }
@@ -58,14 +69,14 @@ class UserService {
 
     validateUserNotFound(user) {
         if (!user) {
-            throw new UserException(HttpStatus.BAD_REQUEST, "User was not found");
+            throw new UserException(httpStatus .BAD_REQUEST, "User was not found");
         }
     }
 
     validateAccessTokenData(email, password) {
         if (!email || !password) {
             throw new UserException(
-                HttpStatus.UNAUTHORIZED,
+                httpStatus .UNAUTHORIZED,
                 "Email and password must be informed"
             );
         }
@@ -73,19 +84,19 @@ class UserService {
 
     validarDadosRequisicao(email) {
         if (!email) {
-            throw new UserException(HttpStatus.BAD_REQUEST, "User email was not informed.");
+            throw new UserException(httpStatus .BAD_REQUEST, "User email was not informed.");
         }
     }
 
     validadeAuthenticatedUser(user, authUser) {
         if (!authUser || user.id != authUser.id) {
-          throw new UserException(HttpStatus.FORBIDDEN, "You cannot see this user data")  
+          throw new UserException(httpStatus .FORBIDDEN, "You cannot see this user data")  
         }
     }
 
     async validadePassword(password, hashPassword) {
         if (!await bcrypt.compare(password, hashPassword)) {
-            throw new UserException(HttpStatus.UNAUTHORIZED, "Password doesn't valid!");
+            throw new UserException(httpStatus .UNAUTHORIZED, "Password doesn't valid!");
         }
     }
     
