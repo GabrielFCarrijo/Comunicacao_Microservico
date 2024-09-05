@@ -12,4 +12,5 @@ public class SalesConfirmationDTO {
 
     private String salesId;
     private SalesStatusEnum status;
+    private String transactionId;
 }

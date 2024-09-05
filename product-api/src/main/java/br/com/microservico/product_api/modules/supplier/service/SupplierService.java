@@ -69,11 +69,15 @@ public class SupplierService {
                 .collect(Collectors.toList());
     }
 
-    public SupplierResponse findById(Integer id) {
+    public SupplierResponse findByIdResponse(Integer id) {
+        return SupplierResponse.of(findById(id));
+    }
+
+    public Supplier findById(Integer id) {
         validateInformedId(id);
-        return supplierRepository.findById(Math.toIntExact(id))
-                .map(SupplierResponse::of)
-                .orElseThrow(() -> new ValidationException("Supplier ID not found"));
+        return supplierRepository
+                .findById(id)
+                .orElseThrow(() -> new ValidationException("There's no supplier for the given ID."));
     }
 
     public SuccesResoponse delete(Integer id) {

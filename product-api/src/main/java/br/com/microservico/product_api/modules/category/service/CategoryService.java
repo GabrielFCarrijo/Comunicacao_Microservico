@@ -69,11 +69,15 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public CategoryResponse findById(Integer id) {
+    public CategoryResponse findByIdResponse(Integer id) {
+        return CategoryResponse.of(findById(id));
+    }
+
+    public Category findById(Integer id) {
         validateInformedId(id);
-        return categoryRepository.findById(Math.toIntExact(id))
-               .map(CategoryResponse::of)
-               .orElseThrow(() -> new ValidationException("Category ID not found"));
+        return categoryRepository
+                .findById(id)
+                .orElseThrow(() -> new ValidationException("There's no category for the given ID."));
     }
 
     public SuccesResoponse delete(Integer id) {

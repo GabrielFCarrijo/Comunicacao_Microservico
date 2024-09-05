@@ -1,15 +1,11 @@
 package br.com.microservico.product_api.modules.product.controller;
 
 import br.com.microservico.product_api.config.exception.SuccesResoponse;
-import br.com.microservico.product_api.modules.category.dto.CategoryRequest;
-import br.com.microservico.product_api.modules.category.dto.CategoryResponse;
-import br.com.microservico.product_api.modules.category.service.CategoryService;
 import br.com.microservico.product_api.modules.product.dto.ProductCheckStockRequest;
 import br.com.microservico.product_api.modules.product.dto.ProductRequest;
 import br.com.microservico.product_api.modules.product.dto.ProductResponse;
 import br.com.microservico.product_api.modules.product.dto.ProductSalesResponse;
 import br.com.microservico.product_api.modules.product.service.ProductService;
-import br.com.microservico.product_api.modules.supplier.dto.SupplierResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +25,7 @@ public class ProductController {
 
     @GetMapping
     public List<ProductResponse> findAll() {
-        return productService.findAllProducts();
+        return productService.findAll();
     }
 
     @GetMapping("/{id}")
@@ -64,11 +60,11 @@ public class ProductController {
 
     @PostMapping("check-stock")
     public SuccesResoponse checkProductsStock(@RequestBody ProductCheckStockRequest request) {
-        return productService.checkProductStock(request);
+        return productService.checkProductsStock(request);
     }
 
     @GetMapping("{id}/sales")
     public ProductSalesResponse findProductSales(@PathVariable Integer productId) {
-        return productService.findProductSalesResponse(productId);
+        return productService.findProductSales(productId);
     }
 }

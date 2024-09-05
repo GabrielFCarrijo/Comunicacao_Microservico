@@ -8,24 +8,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import static br.com.microservico.product_api.config.exception.interceptor.RequestUtil.getCurrentRequest;
+
 @Component
 public class FeignClienteAuthInterceptor implements RequestInterceptor {
 
     private static final String AUTHORIZATION = "Authorization";
+    private static final String TRANSACTION_ID = "transaction_id";
 
     @Override
     public void apply(RequestTemplate requestTemplate) {
         var createRequest = getCurrentRequest();
         requestTemplate.header(AUTHORIZATION, createRequest.getHeader(AUTHORIZATION));
-    }
-
-    private HttpServletRequest getCurrentRequest() {
-        try {
-            return ((ServletRequestAttributes)
-                    RequestContextHolder.getRequestAttributes()).getRequest();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ValidationException("Failed to get current request");
-        }
+        requestTemplate.header(TRANSACTION_ID, createRequest.getHeader(TRANSACTION_ID));
     }
 }
