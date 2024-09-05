@@ -1,11 +1,12 @@
-import express from "express"
+import express from "express";
 
 import { connectMongoDb } from "./src/config/db/mongoDbConfig.js";
-import { createInitialData } from "./src/config/db/initialData.js"
-import { connectRabbitMq } from "./src/config/rabbitmq/rabbitConfig.js"
+import { createInitialData } from "./src/config/db/initialData.js";
+import { connectRabbitMq } from "./src/config/rabbitmq/rabbitConfig.js";
 
 import checkToken from "./src/config/auth/checkToken.js";
-import orderRoutes from "./src/modules/sales/routes/OrderRoute.js"
+import orderRoutes from "./src/modules/sales/routes/OrderRoute.js";
+import tracing from "./src/config/tracing.js";
 
 const app = express();
 const env = process.env;
@@ -15,6 +16,7 @@ connectMongoDb();
 createInitialData();
 connectRabbitMq();
 
+app.use(tracing)
 app.use(express.json())
 app.use(checkToken);
 app.use(orderRoutes)
