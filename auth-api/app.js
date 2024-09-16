@@ -3,7 +3,6 @@ import { createInicialData } from "./scr/config/initialData.js";
 import userRoutes from "./scr/modules/user/routes/UserRoutes.js";
 import tracing from "./scr/config/tracing.js";
 
-
 const app = express();
 const env = process.env;
 const PORT = env.PORT || 8080;
