@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import * as httpStatus from '../config/constants/httpStatus.js';
+import * as httpStatus from './constants/httpStatus.js';
 
 export default (req, res, next) => {
   let { transactionid } = req.headers;

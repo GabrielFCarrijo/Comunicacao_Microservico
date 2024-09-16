@@ -3,7 +3,7 @@ import {promisify} from "util";
 
 import AuthException from "./AuthException.js";
 import * as secrets from "../../config/constants/secrets.js"
-import * as httpStatus from "../../config/constants/HttpStatus.js"
+import * as httpStatus from "../constants/httpStatus.js"
 
 const bearer = "bearer";
 
