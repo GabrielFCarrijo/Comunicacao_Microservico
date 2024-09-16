@@ -1,25 +1,38 @@
-import { Sequelize } from "sequelize";
+import Sequelize from "sequelize";
 
-const sequelize = new Sequelize("auth-db", "postgres", "postgres", {
-    host: "localhost",
-    port: 5434, // Porta do PostgreSQL, se diferente da padrão 5432
-    dialect: "postgres",
-    quoteIdentifiers: false,
-    define: {
-        syncOnAssociation: true,
-        timestamps: false,
-        underscored: true,
-        underscoredAll: true,
-        freezeTableName: true
-    }
+import {
+  DB_NAME,
+  DB_HOST,
+  DB_USER,
+  DB_PASSWORD,
+  DB_PORT,
+} from "./constants/secrets.js";
+
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
+  port: DB_PORT,
+  dialect: "postgres",
+  quoteIdentifiers: false,
+  define: {
+    syncOnAssociation: true,
+    timestamps: false,
+    underscored: true,
+    underscoredAll: true,
+    freezeTableName: true,
+  },
+  pool: {
+    acquire: 180000,
+  },
 });
 
-sequelize.authenticate()
-    .then(() => {
-        console.info("Connection has been established successfully.");
-    })
-    .catch((err) => {
-        console.error("Unable to connect to the database:", err);
-    });
+sequelize
+  .authenticate()
+  .then(() => {
+    console.info("Connection has been stablished!");
+  })
+  .catch((err) => {
+    console.error("Unable to connect to the database.");
+    console.error(err.message);
+  });
 
 export default sequelize;
