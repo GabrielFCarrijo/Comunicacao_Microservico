@@ -10,17 +10,27 @@ import java.util.HashMap;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/")
 public class StatusController {
 
-    @GetMapping("status")
+    @GetMapping
+    public ResponseEntity<HashMap<String, Object>> getRoot() {
+        var response = getSuccesResponse();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("api/status")
     public ResponseEntity<HashMap<String, Object>> getApiStatus() {
-        var response = new HashMap<String, Object>();
+        var response = getSuccesResponse();
+        return ResponseEntity.ok(response);
+    }
+
+    private HashMap<String, Object> getSuccesResponse() {
+        var response = new HashMap<java.lang.String, java.lang.Object>();
 
         response.put("service", "`Product-Api");
         response.put("status", "UP");
         response.put("httpsStatus", HttpStatus.OK.value());
-
-        return ResponseEntity.ok(response);
+        return response;
     }
 }

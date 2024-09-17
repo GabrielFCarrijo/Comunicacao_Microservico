@@ -1,6 +1,7 @@
 import express from "express";
 import { createInicialData } from "./scr/config/initialData.js";
 import userRoutes from "./scr/modules/user/routes/UserRoutes.js";
+import tracing from "./scr/config/tracing.js";
 
 const app = express();
 const env = process.env;
@@ -38,6 +39,7 @@ app.get("/api/initial-data", (req, res) => {
   return res.json({ message: "Data created." });
 });
 
+app.use(tracing);
 app.use(userRoutes);
 
 app.listen(PORT, () => {
