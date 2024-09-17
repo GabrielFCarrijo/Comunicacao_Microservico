@@ -2,10 +2,10 @@
 
 ## Tecnologias
 
-* **Java 11**
-* **Spring Boot 2**
+* **Java 17**
+* **Spring Boot 3**
 * **Javascript ES6**
-* **Node.js 14**
+* **Node.js 16**
 * **ES6 Modules**
 * **Express.js**
 * **MongoDB (Container e Cloud MongoDB)**
