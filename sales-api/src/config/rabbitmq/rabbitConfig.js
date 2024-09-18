@@ -1,5 +1,4 @@
 import amqp from "amqplib/callback_api.js";
-import { RABBIT_MQ_URL } from "../secrets/secrets.js";
 import { listenToSalesConfirmationQueue } from "../../modules/sales/rabbitmq/salesConfirmationListner.js"
 
 import {
@@ -10,6 +9,7 @@ import {
   SALES_CONFIRMATION_ROUTING_KEY,
 } from "./queue.js";
 
+import { RABBIT_MQ_URL } from "../secrets/secrets.js";
 
 const TWO_SECONDS = 2000;
 
@@ -40,8 +40,8 @@ async function connectRabbitMqAndCreateQueues() {
       connection.close();
     }, TWO_SECONDS);
   });
-  listenToSalesConfirmationQueue();
   setTimeout(function () {
+    listenToSalesConfirmationQueue();
   }, TWO_SECONDS);
 }
 

@@ -44,7 +44,7 @@ public class ProductService {
     private SupplierService supplierService;
     @Autowired
     private SalesConfirmationSender salesConfirmationSender;
-    @Autowired
+    @Lazy
     private SalesClient salesClient;
     private final ObjectMapper objectMapper;
 

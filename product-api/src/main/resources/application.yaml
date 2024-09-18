@@ -12,8 +12,8 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:product-db}
-    username: ${DB_USER:admin}
-    password: ${DB_PASSWORD:123456}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
     initialization-mode: always
     initialize: true
     continue-on-error: true
@@ -30,11 +30,11 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
   rabbitmq:
-    host: ${RABBIT_MQ_HOST:localhost}
+    host: ${RABBIT_MQ_HOST:cow.rmq2.cloudamqp.com}
     port: ${RABBIT_MQ_PORT:5672}
-    username: ${RABBIT_MQ_USER:guest}
-    password: ${RABBIT_MQ_PASSWORD:guest}
-    virtual-host: ${RABBIT_MQ_VHOST:}
+    username: ${RABBIT_MQ_USER:whecvpal}
+    password: ${RABBIT_MQ_PASSWORD:KMiYc0pxjRT21cyF6wTF1pnrQakTauhv}
+    virtual-host: ${RABBIT_MQ_VHOST:whecvpal}
 
 app-config:
 

@@ -2,3 +2,4 @@ node_modules
 debug.log
 yarn.log
 yarn-error.log
+*.zip
